@@ -36,8 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //定义路由 一定要在解析body-parser中间件之后引入
-//路由定义
-app.use('/admin', adminRouter)
+require("./routes/admin/index")(app)
 
 
 // catch 404 and forward to error handler
