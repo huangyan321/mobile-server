@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var categories = require('./categories/index');
-router.use('/categories', categories)
+var Category = require('../../model/Category')
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.send("<h1>我是一级admin路由</h1>");
+router.post('/categories',async function (req, res, next) {
+  var data = await Category.create(req.body)
+  res.send(data)
 });
 
 module.exports = router;
