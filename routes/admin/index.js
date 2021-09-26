@@ -39,13 +39,21 @@ module.exports = app => {
     })
   });
 
-  app.use('/admin/rest/:resource', function (req, res, next) {
+  app.use('/admin/api/rest/:resource', function (req, res, next) {
     //将路由名规范化为模块名称
     const modelName = inflection.classify(req.params.resource);
+    console.log(modelName);
     //引入对应模块
     const model = require(`../../model/${modelName}`);
     //将模块挂在到req中
     req.Model = model;
     next();
   }, router)
+  const multer = require('multer')
+  const upload = multer({dest: __dirname + '/../../static'})
+  app.use('/admin/api/upload',upload.single('file'),async function(req,res) {
+    const file = req.file;
+    file.url = `http://127.0.0.1:3000/static/${file.filename}`
+    res.send(file)
+  })
 };
