@@ -14,6 +14,11 @@ const schema = mongoose.Schema({
   title: {
     type: String
   },
+  //英雄职业
+  categories: [{
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Category'
+  }],
   //英雄评分
   scores: {
     //难度
@@ -50,21 +55,13 @@ const schema = mongoose.Schema({
   }],
   //顺风出装
   itemsD: [{
-    icon: {
-      type: String
-    },
-    name: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "Item"
-    }
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Item"
   }],
   //逆风出装
   itemsU: [{
-    icon: String,
-    name: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "Item"
-    }
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "Item"
   }],
   //使用提示
   usageTips: {
