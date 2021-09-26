@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const url = "mongodb://127.0.0.1:27017/"
 const options = {
   user: "root",
-  pass: "175947",
+  pass: "root",
   dbName: "moba"
 }
 
