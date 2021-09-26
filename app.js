@@ -23,6 +23,7 @@ app.all("*", function (req, res, next) {
     next();
 })
 
+app.use('/static',express.static(__dirname + '/static'))
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'ejs');
