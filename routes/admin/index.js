@@ -7,6 +7,7 @@ module.exports = app => {
   var inflection = require('inflection')
   //增加
   router.post('/', async function (req, res, next) {
+    console.log(req.Model,req.body);
     var data = await req.Model.create(req.body)
     res.send(data)
   });
@@ -17,14 +18,19 @@ module.exports = app => {
   });
   //获取列表
   router.get('/', async function (req, res, next) {
-    console.log(req.Model.modelName);
+    var pageSize = req.query.pageSize ? Number(req.query.pageSize) : ''
+    var currPage = req.query.currPage ? Number(req.query.currPage) : ''
     const queryOptions = {};
     if (req.Model.modelName === 'Category') {
-    //加入populate关联查询传入字段的整个内容
+      //加入populate关联查询传入字段的整个内容
       queryOptions.populate = 'parent'
     }
-    var data = await req.Model.find().setOptions(queryOptions).limit(10)
-    res.send(data)
+    var data = await req.Model.find().setOptions(queryOptions).skip((currPage-1) * pageSize).limit(pageSize)
+    var total = await req.Model.find().count()
+    res.send({
+      data,
+      total
+    })
   });
   //条件查询
   router.get('/:id', async function (req, res, next) {
@@ -50,8 +56,10 @@ module.exports = app => {
     next();
   }, router)
   const multer = require('multer')
-  const upload = multer({dest: __dirname + '/../../static'})
-  app.use('/admin/api/upload',upload.single('file'),async function(req,res) {
+  const upload = multer({
+    dest: __dirname + '/../../static'
+  })
+  app.use('/admin/api/upload', upload.single('file'), async function (req, res) {
     const file = req.file;
     file.url = `http://127.0.0.1:3000/static/${file.filename}`
     res.send(file)

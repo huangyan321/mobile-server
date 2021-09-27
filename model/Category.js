@@ -8,7 +8,7 @@ const schema = mongoose.Schema({
   parent: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'Category'
-  }
+  },
 })
 
 module.exports = mongoose.model('Category', schema)
