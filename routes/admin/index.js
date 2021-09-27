@@ -7,7 +7,6 @@ module.exports = app => {
   var inflection = require('inflection')
   //增加
   router.post('/', async function (req, res, next) {
-    console.log(req.Model,req.body);
     var data = await req.Model.create(req.body)
     res.send(data)
   });
