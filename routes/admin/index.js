@@ -1,5 +1,6 @@
 //通用化crud接口
 module.exports = app => {
+  var jwt = require('jsonwebtoken')
   var express = require('express');
   var router = express.Router({
     mergeParams: true
@@ -24,7 +25,7 @@ module.exports = app => {
       //加入populate关联查询传入字段的整个内容
       queryOptions.populate = 'parent'
     }
-    var data = await req.Model.find().setOptions(queryOptions).skip((currPage-1) * pageSize).limit(pageSize)
+    var data = await req.Model.find().setOptions(queryOptions).skip((currPage - 1) * pageSize).limit(pageSize)
     var total = await req.Model.find().count()
     res.send({
       data,
@@ -62,5 +63,50 @@ module.exports = app => {
     const file = req.file;
     file.url = `http://127.0.0.1:3000/static/${file.filename}`
     res.send(file)
+  })
+  app.post('/admin/api/login', async function (req, res) {
+    const {
+      username,
+      password
+    } = req.body
+    const Model = require("../../model/Admin");
+    //这里是个对象
+    const user = await Model.findOne({
+      username
+    })
+    if (!user) {
+      return res.status(422).send({
+        message: "用户名不存在"
+      })
+    }
+    const compareRes = require('bcryptjs').compareSync(password, user.password)
+    if (!compareRes) {
+      return res.status(422).send({
+        message: "密码不正确"
+      })
+    }
+    const token = jwt.sign({
+      _id: user._id
+    }, app.get("publicKey"))
+    res.send({
+      token
+    })
+  })
+  app.get("/admin/api/getInfo", async function (req, res) {
+    const Model = require("../../model/Admin");
+    const {
+      token
+    } = req.query;
+    if (!token) {
+      return res.status(400).send({
+        message: "无效的token"
+      })
+    }
+    const {
+      _id
+    } = await jwt.verify(token, app.get("publicKey"))
+    //通过id查询除了password之外的所有字段
+    const userInfo = await Model.findById(_id,'-password')
+    res.send(userInfo)
   })
 };

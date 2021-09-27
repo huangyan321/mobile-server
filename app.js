@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //定义路由 一定要在解析body-parser中间件之后引入
 require("./routes/admin/index")(app)
 
-
+app.set("publicKey","xt12345.")
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

@@ -8,9 +8,10 @@ const schema = mongoose.Schema({
   password: {
     type: String,
     //防止被查询到
-    select: false,
+    //TODO
+    select: true,
     set(val) {
-      return require('bcrypt').hashSync(val,10)
+      return require('bcryptjs').hashSync(val, 10)
     }
   }
 })
