@@ -63,11 +63,11 @@ const schema = mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "Item"
   }],
-  //使用提示
+  //使用技巧
   usageTips: {
     type: String
   },
-  //对抗提示
+  //对抗技巧
   battleTips: {
     type: String
   },
