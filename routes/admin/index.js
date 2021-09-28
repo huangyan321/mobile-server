@@ -10,17 +10,17 @@ module.exports = app => {
   const modelAdmin = require("../../model/Admin");
   const certification = require("../../middleware/auth")
   //增加
-  router.post('/', certification(app.get("publicKey")), async function (req, res, next) {
+  router.post('/', certification(), async function (req, res, next) {
     var data = await req.Model.create(req.body)
     res.send(data)
   });
   //修改
-  router.put('/:id', certification(app.get("publicKey")), async function (req, res, next) {
+  router.put('/:id', certification(), async function (req, res, next) {
     var data = await req.Model.findByIdAndUpdate(req.params.id, req.body)
     res.send(data)
   });
   //获取列表
-  router.get('/', certification(app.get("publicKey")), async function (req, res, next) {
+  router.get('/', certification(), async function (req, res, next) {
     var pageSize = req.query.pageSize ? Number(req.query.pageSize) : '';
     var currPage = req.query.currPage ? Number(req.query.currPage) : '';
     const queryOptions = {};
@@ -36,19 +36,19 @@ module.exports = app => {
     })
   });
   //条件查询
-  router.get('/:id', certification(app.get("publicKey")), async function (req, res, next) {
+  router.get('/:id', certification(), async function (req, res, next) {
     var data = await req.Model.findById(req.params.id)
     res.send(data)
   });
   //删除
-  router.delete('/:id', certification(app.get("publicKey")), async function (req, res, next) {
+  router.delete('/:id', certification(), async function (req, res, next) {
     await req.Model.findByIdAndDelete(req.params.id)
     res.send({
       success: true
     })
   });
 
-  app.use('/admin/api/rest/:resource',certification(app.get("publicKey")), function (req, res, next) {
+  app.use('/admin/api/rest/:resource',certification(), function (req, res, next) {
     //将路由名规范化为模块名称
     const modelName = inflection.classify(req.params.resource);
     console.log(modelName);
@@ -62,7 +62,7 @@ module.exports = app => {
   const upload = multer({
     dest: __dirname + '/../../static'
   })
-  app.use('/admin/api/upload', certification(app.get("publicKey")), upload.single('file'), async function (req, res) {
+  app.use('/admin/api/upload', certification(), upload.single('file'), async function (req, res) {
     const file = req.file;
     file.url = `http://127.0.0.1:3000/static/${file.filename}`
     res.send(file)
